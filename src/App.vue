@@ -1,8 +1,22 @@
 <template>
 
   <div id="app">
-    
-    <generate-password v-show="show_modal" @close="handleClose" class="modal--dark modal--medium" />
+        
+    <tab-container :tab_headers="tab_headers" @changeTab="tabChange">
+
+      <div slot="tabs_content">
+
+        <div id="safe" class="tab__content" v-if="active_tab === 'safe'">
+          <safe />
+        </div>
+
+        <div id="generate" class="tab__content" v-if="active_tab === 'generate'">
+          <generate-password class="modal--dark modal--medium" />
+        </div>
+
+      </div>
+
+    </tab-container>
 
   </div>
 
@@ -10,25 +24,41 @@
 
 <script>
 /* eslint-disable no-console */
-import GeneratePassword from './components/GeneratePassword.vue'
+import TabContainer from './components/containers/TabContainer.vue';
+import Safe from './components/views/Safe.vue';
+import GeneratePassword from './components/views/GeneratePassword.vue';
 
 export default {
   name: 'app',
   components: {
-    GeneratePassword
+    GeneratePassword,
+    TabContainer,
+    Safe,
   },
   data() {
     return {
-      show_modal: true,
+      show_modal: false,
+      active_tab: 'safe',
+      tab_headers: [
+        {
+          id: 'safe',
+          icon: '',
+          text: 'Safe',
+          default: true,
+        },
+        {
+          id: 'generate',
+          icon: '',
+          text: 'Generate',
+          default: false,
+        }
+      ],
     }
   },
   methods: {
-    handleClose() {
-      this.show_modal = false;
-    },
-    handleClick() {
-      this.show_modal = true;
-    },
+    tabChange(tab) {
+      this.active_tab = tab;
+    }
   }
 }
 </script>
@@ -44,9 +74,6 @@ body {
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
   margin-top: 60px;
-}
-#app {
-  width: 420px;
-  height: 350px;
+  background: #333;
 }
 </style>
